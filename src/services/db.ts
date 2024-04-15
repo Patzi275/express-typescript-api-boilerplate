@@ -1,5 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
 import dbConfig from "../config/db.config";
+import User from "../models/user";
+
+const models = [User];
 
 const db = new Sequelize({
     database: dbConfig.DATABASE,
@@ -12,7 +15,8 @@ const db = new Sequelize({
         min: 0,
         acquire: 30000,
         idle: 10000
-    }
+    },
+    models: [User]
 });
 
 export default db;
