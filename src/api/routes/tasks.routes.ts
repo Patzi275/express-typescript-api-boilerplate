@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTask, deleteTask, getAllTasks, getTask, updateTask } from "../controllers/tasks";
+import { createTask, deleteTask, getAllTasks, getTask, updateTask } from "../controllers/tasks.controller";
 
 const router = Router();
 
