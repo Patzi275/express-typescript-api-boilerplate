@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import userRepository from "../../repositories/user.repository";
 import User from "../../models/user.model";
 import { validationResult } from "express-validator";
+import { generateToken } from "../../services/jwt.service";
 
 export const createUser = async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -19,7 +20,10 @@ export const createUser = async (req: Request, res: Response) => {
             ...user, role: 'user'
         }));
 
-        return res.status(200).json({
+        const accessToken = generateToken(newUser);
+
+        return res.status(201).json({
+            accessToken,
             user: newUser,
         });
 
