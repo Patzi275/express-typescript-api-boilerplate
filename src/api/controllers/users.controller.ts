@@ -16,15 +16,14 @@ export const createUser = async (req: Request, res: Response) => {
     
     try {
         const user = req.body;
-        const newUser = await userRepository.save(new User({
-            ...user, role: 'user'
-        }));
-
+        const newUser = new User({...user, role: 'user'});
         const accessToken = generateToken(newUser);
+
+        const savedUser = await userRepository.save(newUser);
 
         return res.status(201).json({
             accessToken,
-            user: newUser,
+            user: savedUser,
         });
 
     } catch (error: any) {
