@@ -1,6 +1,8 @@
 import app from './app';
-import { port } from './config/server.config';
-import db from './services/db';
+import serverConfig from './config/server.config';
+import db from './services/db.service';
+
+const { PORT } = serverConfig;
 
 const initApp = async () => {    
     try {
@@ -9,8 +11,8 @@ const initApp = async () => {
         await db.sync({force: true});
         console.log("Database connection has been established successfully.");
 
-        app.listen(port || 3000, () => {
-            console.log(`Server running at http://localhost:${port}`);
+        app.listen(PORT || 3000, () => {
+            console.log(`Server running at http://localhost:${PORT}`);
         });
     } catch (error) {
         console.error("Unable to connect to the database:", error);
