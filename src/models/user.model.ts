@@ -1,4 +1,5 @@
 import { Model, Table, Column, DataType } from "sequelize-typescript";
+import bcrypt from 'bcrypt';
 
 @Table({tableName: "users"})
 export default class User extends Model {
@@ -32,4 +33,19 @@ export default class User extends Model {
         defaultValue: 'user'
     })
     role!: string;
+
+    dto() {
+        return {
+            id: this.id,
+            firstname: this.firstname,
+            lastname: this.lastname,
+            email: this.email,
+            phone: this.phone,
+            role: this.role
+        };
+    }
+
+    comparePassword(password: string) {
+        return bcrypt.compareSync(password, this.password);
+    }
 }

@@ -2,8 +2,6 @@ import { checkSchema } from "express-validator";
 import userRepository from "../../repositories/user.repository";
 
 const validator = checkSchema({
-    firstname: { notEmpty: { errorMessage: "Firstname is required" } },
-    lastname: { notEmpty: { errorMessage: "Lastname is required" } },
     email: {
         notEmpty: {
             errorMessage: "Email is required",
@@ -16,22 +14,20 @@ const validator = checkSchema({
         custom: {
             options: async (value: string) => {
                 const emailExist = await userRepository.existByEmail(value);
-                if (emailExist) throw new Error();
+                if (!emailExist) throw new Error();
             },
-            errorMessage: "Email is already used"
+            errorMessage: "Email is not registered"
         }
     },
     password: {
-        isLength: {
-            options: { min: 6 },
-        },
-        errorMessage: "Password should have at least 6 characters"
+        errorMessage: "Password is incorrect",
+        custom: {
+            options: async (value: string, { req }) => {
+                const user = await userRepository.retrieveByEmail(req.body.email);
+                if (!user || !user.comparePassword(value)) throw new Error();
+            }
+        }
     },
-    phone: {
-        isMobilePhone: {
-            options: ['any', { strictMode: true }],
-        },
-    }
-}, ['body']);
+});
 
 export default validator;

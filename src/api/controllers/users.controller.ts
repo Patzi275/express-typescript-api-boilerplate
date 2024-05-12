@@ -29,7 +29,7 @@ export const createUser = async (req: Request, res: Response) => {
 
         return res.status(201).json({
             accessToken,
-            user: savedUser,
+            user: savedUser.dto(),
         });
 
     } catch (error: any) {
@@ -54,23 +54,17 @@ export const loginUser = async (req: Request, res: Response) => {
         const { email, password } = req.body;
         const user = await userRepository.retrieveByEmail(email);
 
-        if (!user) {
+        if (user == null) {
             return res.status(404).json({
                 message: 'User not found',
             });
         }
-
-        if (!bcrypt.compareSync(user.password, password)) {
-            return res.status(401).json({
-                message: 'Invalid password',
-            });
-        }
-
+        
         const accessToken = generateToken(user);
 
         return res.status(200).json({
             accessToken,
-            user,
+            user: user.dto(),
         });
 
     } catch (error: any) {
