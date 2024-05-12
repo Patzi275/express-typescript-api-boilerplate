@@ -1,12 +1,10 @@
 import express, { Request, Response } from 'express';
-import tasksRoutes from './api/routes/tasks.routes';
-import authRoutes from './api/routes/auth.routes';
+import router from './api/routes';
 
 const app = express();
 
 app.use(express.json());
-app.use('/tasks', tasksRoutes);
-app.use('/auth', authRoutes);
+app.use('/api', router);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript Express!');
