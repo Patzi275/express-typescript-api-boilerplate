@@ -3,6 +3,7 @@ import User from "../models/user.model";
 interface IUserRepository {
     save(user: User): Promise<User>;
     retrieveById(userId: number): Promise<User | null>;
+    retrieveByEmail(email: string): Promise<User | null>; 
     existByEmail(email: string): Promise<boolean>;
     update(user: User): Promise<User>;
     delete(userId: number): Promise<number>;
@@ -27,6 +28,14 @@ class UserRepository implements IUserRepository {
     async retrieveById(userId: number): Promise<User | null> {
         try {
             return await User.findByPk(userId);
+        } catch (error: any) {
+            throw new Error("Error retrieving user: " + error.message);
+        }
+    }
+
+    async retrieveByEmail(email: string): Promise<User | null> {
+        try {
+            return await User.findOne({where: { email }});
         } catch (error: any) {
             throw new Error("Error retrieving user: " + error.message);
         }
